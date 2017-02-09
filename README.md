@@ -1,9 +1,10 @@
-woxxy / MySQL-backup-to-Amazon-S3
+DarkyShadoW / MongoDB-backup-to-Amazon-S3
+based on woxxy / MySQL-backup-to-Amazon-S3
 =================================
 
-(This is not really an application, just a manual and some lines of code)
+(This is not really an application, just some lines of code)
 
-Amazon S3 can be an interestingly safe and cheap way to store your important data. Some of the most important data in the world is saved in... MySQL, and surely mine is quite important, so I needed such a script.
+Amazon S3 can be an interestingly safe and cheap way to store your important data. The use of MongoDB it's increasing day to day, so I needed such a script.
 
 If you have a 500mb database (that's 10 times larger than any small site), with the priciest plan, keeping 6 backups (two months, two weeks, two days) costs $0.42 a month ($0.14GB/month). With 99.999999999% durability and 99.99% availability. Uploads are free, downloads would happen only in case you actually need to retrieve the backup (which hopefully won't be needed, but first GB is free, and over that $0.12/GB).
 
@@ -31,39 +32,36 @@ Setup
 
 		s3cmd mb s3://my-database-backups
 	
-6. Put the mysqltos3.sh file somewhere in your server, like `/home/youruser`
-7. Give the file 755 permissions `chmod 755 /home/youruser/mysqltos3.sh` or via FTP
-8. Edit the variables near the top of the mysqltos3.sh file to match your bucket and MySQL authentication
+6. Put the mongodbtos3.sh file somewhere in your server, like `/home/youruser`
+7. Give the file 755 permissions `chmod 755 /home/youruser/mongodbtos3.sh` or via FTP
+8. Edit the variables near the top of the mongodbtos3.sh file to match your bucket and MongoDB authentication
 
 Now we're set. You can use it manually:
 
 	#set a new daily backup, and store the previous day as "previous_day"
-	sh /home/youruser/mysqltos3.sh
+	sh /home/youruser/mongodbtos3.sh
 	
 	#set a new weekly backup, and store previous week as "previous_week"
-	/home/youruser/mysqltos3.sh week
+	/home/youruser/mongodbtos3.sh week
 	
 	#set a new weekly backup, and store previous month as "previous_month"
-	/home/youruser/mysqltos3.sh month
+	/home/youruser/mongodbtos3.sh month
 	
 But, we don't want to think about it until something breaks! So enter `crontab -e` and insert the following after editing the folders
 
-	# daily MySQL backup to S3 (not on first day of month or sundays)
-	0 3 2-31 * 1-6 sh /home/youruser/mysqltos3.sh day
-	# weekly MySQL backup to S3 (on sundays, but not the first day of the month)
-	0 3 2-31 * 0 sh /home/youruser/mysqltos3.sh week
-	# monthly MySQL backup to S3
-	0 3 1 * * sh /home/youruser/mysqltos3.sh month
+	# daily MongoDB backup to S3 (not on first day of month or sundays)
+	0 3 2-31 * 1-6 sh /home/youruser/mongodbtos3.sh day
+	# weekly MongoDB backup to S3 (on sundays, but not the first day of the month)
+	0 3 2-31 * 0 sh /home/youruser/mongodbtos3.sh week
+	# monthly MongoDB backup to S3
+	0 3 1 * * sh /home/youruser/mongodbtos3.sh month
 
 Or, if you'd prefer to have the script determine the current date and day of the week, insert the following after editing the folders
 
 	# automatic daily / weekly / monthly backup to S3.
-	0 3 * * * sh /home/youruser/mysqltos3.sh auto
+	0 3 * * * sh /home/youruser/mongodbtos3.sh auto
 
 And you're set.
 
 
-Troubleshooting
----------------
-
-None yet.
+All thanks to woxxy script
